@@ -1,0 +1,9 @@
+data/
+results/
+outputs/
+*.pth
+*.npy
+__pycache__/
+*.pyc
+.venv/
+venv/

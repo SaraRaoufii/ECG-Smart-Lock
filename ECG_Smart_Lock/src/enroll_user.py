@@ -69,7 +69,6 @@ Web UI
 
 """
 
-import csv
 import json
 import os
 import time
@@ -88,6 +87,8 @@ from preprocessing import (
 )
 
 from model import get_model
+
+from database import init_database, upsert_user_with_template
 
 
 # =========================================================
@@ -180,15 +181,7 @@ RESULTS_DIR = (
 #
 # └── live_ecg.json
 
-USERS_DIR = (
-    RESULTS_DIR
-    / "user_database"
-)
-
-USERS_FILE = (
-    USERS_DIR
-    / "users.csv"
-)
+# User templates are stored in PostgreSQL.
 
 IMAGE_SCALE_FILE = (
     RESULTS_DIR
@@ -1283,16 +1276,13 @@ def save_user_template(
 ):
     """
     ساخت template با میانگین embeddingها
-    و ذخیره در:
-
-    results/user_database/<name>.npy
+    و ذخیره در PostgreSQL.
     """
 
     if (
         len(embeddings)
         < MIN_ENROLLMENT_EMBEDDINGS
     ):
-
         print(
             "ERROR: تعداد embedding برای "
             "ذخیره template کافی نیست."
@@ -1322,7 +1312,6 @@ def save_user_template(
         not np.isfinite(norm)
         or norm == 0
     ):
-
         print(
             "ERROR: template نامعتبر است."
         )
@@ -1331,167 +1320,27 @@ def save_user_template(
 
     template = (
         template / norm
-    )
+    ).astype(np.float32)
 
-    # -----------------------------------------------------
-    # Create user database directory
-    # -----------------------------------------------------
-
-    USERS_DIR.mkdir(
-        parents=True,
-        exist_ok=True
-    )
-
-    template_path = (
-        USERS_DIR
-        / f"{name}.npy"
-    )
-
-    np.save(
-        template_path,
-        template
-    )
+    try:
+        upsert_user_with_template(
+            name,
+            len(embeddings),
+            template
+        )
+    except Exception as e:
+        print(
+            "\nERROR در ذخیره Template در PostgreSQL:"
+        )
+        print(e)
+        return False
 
     print(
-        "\nTemplate ذخیره شد:"
-    )
-
-    print(
-        template_path
+        "\nTemplate در PostgreSQL ذخیره شد."
     )
 
     return True
 
-
-# =========================================================
-# Update users.csv
-# =========================================================
-
-def update_users_csv(
-    name,
-    num_beats
-):
-    """
-    ثبت کاربر در users.csv.
-
-    ساختار فایل:
-
-    user_name,num_beats,embedding_path
-    """
-
-    USERS_DIR.mkdir(
-        parents=True,
-        exist_ok=True
-    )
-
-    rows = []
-
-    if USERS_FILE.exists():
-
-        with open(
-            USERS_FILE,
-            "r",
-            encoding="utf-8-sig",
-            newline=""
-        ) as f:
-
-            reader = csv.DictReader(
-                f
-            )
-
-            for row in reader:
-
-                if row:
-
-                    rows.append(
-                        row
-                    )
-
-    # مسیر template
-
-    template_path = (
-        USERS_DIR
-        / f"{name}.npy"
-    )
-
-    # بررسی اینکه کاربر قبلاً وجود داشته یا نه
-
-    existing_index = None
-
-    for i, row in enumerate(
-        rows
-    ):
-
-        existing_name = (
-            row.get("user_name")
-            or row.get("name")
-            or ""
-        ).strip().lower()
-
-        if existing_name == name.lower():
-
-            existing_index = i
-
-            break
-
-    new_row = {
-
-        "user_name": name,
-
-        "num_beats": str(
-            num_beats
-        ),
-
-        "embedding_path": str(
-            template_path
-        )
-    }
-
-    if existing_index is None:
-
-        rows.append(
-            new_row
-        )
-
-    else:
-
-        rows[
-            existing_index
-        ] = new_row
-
-    # ذخیره مجدد CSV
-
-    with open(
-        USERS_FILE,
-        "w",
-        encoding="utf-8-sig",
-        newline=""
-    ) as f:
-
-        fieldnames = [
-            "user_name",
-            "num_beats",
-            "embedding_path"
-        ]
-
-        writer = csv.DictWriter(
-            f,
-            fieldnames=fieldnames
-        )
-
-        writer.writeheader()
-
-        writer.writerows(
-            rows
-        )
-
-    print(
-        "\nusers.csv به‌روزرسانی شد:"
-    )
-
-    print(
-        USERS_FILE
-    )
 
 
 # =========================================================
@@ -1714,15 +1563,6 @@ def main(name=None):
         return
 
     # -----------------------------------------------------
-    # Update users.csv
-    # -----------------------------------------------------
-
-    update_users_csv(
-        name,
-        len(embeddings)
-    )
-
-    # -----------------------------------------------------
     # Final result
     # -----------------------------------------------------
 
@@ -1737,11 +1577,11 @@ def main(name=None):
     )
 
     print(
-        f"Template: results/user_database/{name}.npy"
+        "Template: PostgreSQL"
     )
 
     print(
-        f"Users database: {USERS_FILE}"
+        "Users database: PostgreSQL"
     )
 
     print_separator()

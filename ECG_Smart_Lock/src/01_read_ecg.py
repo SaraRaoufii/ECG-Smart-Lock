@@ -1,10 +1,7 @@
 from pathlib import Path
-
 import wfdb
 import matplotlib.pyplot as plt
 
-
-# مسیر پروژه
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 
 # اولین رکورد فرد شماره 1

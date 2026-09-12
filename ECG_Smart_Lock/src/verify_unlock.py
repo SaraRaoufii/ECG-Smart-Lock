@@ -26,7 +26,6 @@ import sys
 from pathlib import Path
 
 import numpy as np
-import pandas as pd
 import torch
 
 
@@ -51,6 +50,8 @@ if str(SRC_DIR) not in sys.path:
 
 from model import get_model
 
+from database import init_database, get_all_templates
+
 
 # =========================================================
 # Import preprocessing / recording
@@ -72,11 +73,7 @@ from enroll_user import (
 
 RESULTS_DIR = PROJECT_DIR / "results"
 
-# محل واقعی Template کاربران
-USERS_DIR = RESULTS_DIR / "user_database"
-
-# محل واقعی users.csv
-USERS_FILE = USERS_DIR / "users.csv"
+# Template کاربران در PostgreSQL نگهداری می‌شود.
 
 # محل واقعی Threshold
 THRESHOLD_FILE = RESULTS_DIR / "unlock_threshold.txt"
@@ -279,202 +276,31 @@ def normalize_embedding(embedding):
 # =========================================================
 
 def load_database():
-
     print()
 
     print(
-        "در حال بارگذاری دیتابیس کاربران..."
+        "در حال بارگذاری دیتابیس کاربران از PostgreSQL..."
     )
 
-    print(
-        "مسیر دیتابیس:"
-    )
-
-    print(
-        USERS_DIR
-    )
-
-    print(
-        "مسیر users.csv:"
-    )
-
-    print(
-        USERS_FILE
-    )
-
-    # -----------------------------------------------------
-    # بررسی users.csv
-    # -----------------------------------------------------
-
-    if not USERS_FILE.exists():
-
-        raise FileNotFoundError(
-            "فایل users.csv پیدا نشد.\n"
-            f"مسیر بررسی‌شده:\n"
-            f"{USERS_FILE}"
+    try:
+        init_database()
+        templates = get_all_templates()
+    except Exception as e:
+        print()
+        print(
+            "❌ خطا در خواندن PostgreSQL:"
         )
+        print(e)
+        raise
 
-    # -----------------------------------------------------
-    # خواندن CSV
-    # -----------------------------------------------------
-
-    db = pd.read_csv(
-        USERS_FILE
-    )
-
-    if db.empty:
-
+    if not templates:
         raise RuntimeError(
-            "فایل users.csv خالی است."
+            "هیچ Template معتبری در PostgreSQL پیدا نشد."
         )
 
-    # -----------------------------------------------------
-    # پیدا کردن ستون نام کاربر
-    # -----------------------------------------------------
+    normalized_templates = {}
 
-    if "user_name" in db.columns:
-
-        name_column = "user_name"
-
-    elif "name" in db.columns:
-
-        name_column = "name"
-
-    else:
-
-        raise ValueError(
-            "در users.csv ستون نام کاربر پیدا نشد.\n"
-            "ستون مورد انتظار: name یا user_name"
-        )
-
-    # -----------------------------------------------------
-    # نمایش ستون‌ها
-    # -----------------------------------------------------
-
-    print()
-
-    print(
-        "ستون‌های users.csv:"
-    )
-
-    print(
-        list(db.columns)
-    )
-
-    templates = {}
-
-    # -----------------------------------------------------
-    # بررسی کاربران
-    # -----------------------------------------------------
-
-    for _, row in db.iterrows():
-
-        user_name = str(
-            row[name_column]
-        ).strip()
-
-        if not user_name:
-
-            continue
-
-        # -------------------------------------------------
-        # پیدا کردن مسیر Embedding
-        # -------------------------------------------------
-
-        embedding_path = None
-
-        # -------------------------------------------------
-        # اگر CSV خودش مسیر embedding داشته باشد
-        # -------------------------------------------------
-
-        if "embedding_path" in db.columns:
-
-            relative_path = str(
-                row["embedding_path"]
-            ).strip()
-
-            if (
-                relative_path
-                and relative_path.lower() != "nan"
-            ):
-
-                candidate_path = Path(
-                    relative_path
-                )
-
-                # اگر مسیر absolute باشد
-                if candidate_path.is_absolute():
-
-                    embedding_path = candidate_path
-
-                # اگر relative باشد
-                else:
-
-                    embedding_path = (
-                        PROJECT_DIR
-                        / candidate_path
-                    )
-
-        # -------------------------------------------------
-        # اگر مسیر در CSV وجود نداشت،
-        # مسیر واقعی user_database ساخته می‌شود.
-        # -------------------------------------------------
-
-        if (
-            embedding_path is None
-            or not embedding_path.exists()
-        ):
-
-            embedding_path = (
-                USERS_DIR
-                / f"{user_name}.npy"
-            )
-
-        # -------------------------------------------------
-        # بررسی فایل
-        # -------------------------------------------------
-
-        if not embedding_path.exists():
-
-            print()
-
-            print(
-                f"⚠️ فایل Embedding کاربر "
-                f"'{user_name}' پیدا نشد:"
-            )
-
-            print(
-                embedding_path
-            )
-
-            continue
-
-        # -------------------------------------------------
-        # Load
-        # -------------------------------------------------
-
-        try:
-
-            embedding = np.load(
-                embedding_path
-            )
-
-        except Exception as e:
-
-            print()
-
-            print(
-                f"⚠️ خطا در خواندن Embedding "
-                f"کاربر '{user_name}':"
-            )
-
-            print(e)
-
-            continue
-
-        # -------------------------------------------------
-        # Shape check
-        # -------------------------------------------------
+    for user_name, embedding in templates.items():
 
         embedding = np.asarray(
             embedding,
@@ -482,105 +308,64 @@ def load_database():
         )
 
         if embedding.ndim != 1:
-
             print()
-
             print(
                 f"⚠️ Embedding کاربر "
                 f"'{user_name}' معتبر نیست."
             )
-
-            print(
-                f"Shape = {embedding.shape}"
-            )
-
             continue
 
-        # -------------------------------------------------
-        # بررسی ابعاد Embedding
-        # -------------------------------------------------
-
         if embedding.shape[0] != 128:
-
             print()
-
             print(
                 f"⚠️ هشدار: Embedding کاربر "
                 f"'{user_name}' دارای "
                 f"{embedding.shape[0]} بعد است."
             )
 
-            print(
-                "Embedding مورد انتظار 128 بعدی است."
-            )
-
-        # -------------------------------------------------
-        # Finite check
-        # -------------------------------------------------
-
         if not np.all(
             np.isfinite(embedding)
         ):
-
             print()
-
             print(
                 f"⚠️ Embedding کاربر "
                 f"'{user_name}' شامل "
                 f"مقادیر نامعتبر است."
             )
-
             continue
 
-        # -------------------------------------------------
-        # Normalize Template
-        # -------------------------------------------------
-
         try:
-
             embedding = normalize_embedding(
                 embedding
             )
-
         except ValueError as e:
-
             print()
-
             print(
                 f"⚠️ Template کاربر "
                 f"'{user_name}' نامعتبر است:"
             )
-
             print(e)
-
             continue
 
-        templates[user_name] = embedding
+        normalized_templates[user_name] = embedding
 
         print(
-            f"  ✓ {user_name:<12} "
-            f"<- {embedding_path.name}"
+            f"  ✓ {user_name:<12} <- PostgreSQL"
         )
 
-    # -----------------------------------------------------
-    # Final check
-    # -----------------------------------------------------
-
-    if len(templates) == 0:
-
+    if len(normalized_templates) == 0:
         raise RuntimeError(
             "هیچ Template معتبر "
-            "در دیتابیس پیدا نشد."
+            "در PostgreSQL پیدا نشد."
         )
 
     print()
-
     print(
         f"✓ تعداد Templateهای معتبر: "
-        f"{len(templates)}"
+        f"{len(normalized_templates)}"
     )
 
-    return templates
+    return normalized_templates
 
 
 # =========================================================
@@ -952,21 +737,11 @@ def main():
     print()
 
     print(
-        "مسیر دیتابیس کاربران:"
+        "دیتابیس کاربران:"
     )
 
     print(
-        USERS_DIR
-    )
-
-    print()
-
-    print(
-        "مسیر users.csv:"
-    )
-
-    print(
-        USERS_FILE
+        "PostgreSQL"
     )
 
     print()
@@ -1073,8 +848,18 @@ def main():
     )
 
     # =====================================================
-    # Load database
+    # Initialize / Load database
     # =====================================================
+    try:
+        init_database()
+    except Exception as e:
+        print()
+        print(
+            "❌ خطا در اتصال به PostgreSQL:"
+        )
+        print(e)
+        return
+
 
     try:
 

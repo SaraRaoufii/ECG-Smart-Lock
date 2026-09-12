@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        ECG Smart Lock
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+    <!-- =====================================================
+         BACKGROUND
+         ===================================================== -->
+
+    <div class="background-glow glow-1"></div>
+    <div class="background-glow glow-2"></div>
+
+
+    <!-- =====================================================
+         PAGE
+         ===================================================== -->
+
+    <main class="page">
+
+
+        <!-- =================================================
+             HEADER
+             ================================================= -->
+
+        <header class="header">
+
+            <div class="brand">
+
+                <div class="logo">
+
+                    <svg
+                        viewBox="0 0 100 100"
+                        aria-hidden="true"
+                    >
+
+                        <path
+                            d="
+                                M10 52
+                                L25 52
+                                L34 52
+                                L42 35
+                                L51 69
+                                L61 43
+                                L68 52
+                                L90 52
+                            "
+                        ></path>
+
+                    </svg>
+
+                </div>
+
+
+                <div class="brand-text">
+
+                    <h1>
+                        ECG Smart Lock
+                    </h1>
+
+                    <p>
+                        سیستم احراز هویت بیومتریک مبتنی بر ECG
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="system-status">
+
+                <span
+                    id="systemDot"
+                    class="status-dot"
+                ></span>
+
+                <span id="systemStatus">
+                    سیستم آماده است
+                </span>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =================================================
+             MODE SELECTOR
+             ================================================= -->
+
+        <div class="mode-selector">
+
+            <button
+                class="mode-button active"
+                id="verifyTab"
+                onclick="switchMode('verify')"
+                type="button"
+            >
+
+                <span class="mode-number">
+                    01
+                </span>
+
+                <span>
+                    احراز هویت
+                </span>
+
+            </button>
+
+
+            <button
+                class="mode-button"
+                id="enrollTab"
+                onclick="switchMode('enroll')"
+                type="button"
+            >
+
+                <span class="mode-number">
+                    02
+                </span>
+
+                <span>
+                    ثبت کاربر جدید
+                </span>
+
+            </button>
+
+        </div>
+
+
+
+        <!-- =================================================
+             VERIFY PAGE
+             ================================================= -->
+
+        <section
+            id="verifyPage"
+            class="mode-page"
+        >
+
+            <div class="main-grid">
+
+
+                <!-- =============================================
+                     AUTHENTICATION CARD
+                     ============================================= -->
+
+                <div class="card auth-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <span class="eyebrow">
+                                BIOMETRIC AUTHENTICATION
+                            </span>
+
+                            <h2>
+                                احراز هویت
+                            </h2>
+
+                            <p>
+                                انگشتان خود را روی الکترودهای ECG قرار دهید
+                                تا هویت شما به‌صورت خودکار شناسایی شود.
+                            </p>
+
+                        </div>
+
+
+                        <div
+                            class="minimal-mark"
+                            id="lockIcon"
+                        >
+
+                            <span></span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =========================================
+                         AUTHENTICATION INFO
+                         ========================================= -->
+
+                    <div class="authentication-info">
+
+                        <div class="info-line"></div>
+
+                        <div>
+
+                            <strong>
+                                شناسایی بدون ورود نام کاربری
+                            </strong>
+
+                            <p>
+                                سیگنال ECG با الگوهای بیومتریک
+                                ذخیره‌شده مقایسه می‌شود.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =========================================
+                         VERIFICATION BUTTON
+                         ========================================= -->
+
+                    <button
+                        id="verifyButton"
+                        class="primary-button"
+                        onclick="startVerification()"
+                        type="button"
+                    >
+
+                        <span class="button-line"></span>
+
+                        شروع احراز هویت
+
+                    </button>
+
+
+
+                    <!-- =========================================
+                         VERIFICATION RESULT
+                         ========================================= -->
+
+                    <div
+                        id="verifyResult"
+                        class="result-box hidden"
+                    >
+
+                        <div
+                            id="verifyResultIcon"
+                            class="result-indicator"
+                        ></div>
+
+                        <div>
+
+                            <h3 id="verifyResultTitle">
+                                ---
+                            </h3>
+
+                            <p id="verifyResultMessage">
+                                ---
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =========================================
+                         DETECTED USER
+                         ========================================= -->
+
+                    <div
+                        id="detectedUser"
+                        class="detected-user hidden"
+                    >
+
+                        <div class="detected-user-line"></div>
+
+                        <div>
+
+                            <span>
+                                کاربر شناسایی‌شده
+                            </span>
+
+                            <strong id="detectedUsername">
+                                ---
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =============================================
+                     ECG MONITOR
+                     ============================================= -->
+
+                <div class="card monitor-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <span class="eyebrow">
+                                ECG MONITOR
+                            </span>
+
+                            <h2>
+                                مانیتور سیگنال
+                            </h2>
+
+                        </div>
+
+
+                        <div
+                            id="liveBadge"
+                            class="live-badge"
+                        >
+
+                            <span
+                                id="liveDot"
+                                class="live-dot"
+                            ></span>
+
+                            <span id="liveText">
+                                READY
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =========================================
+                         ECG DISPLAY
+                         ========================================= -->
+
+                    <div class="ecg-box">
+
+                        <div class="ecg-grid"></div>
+
+                        <canvas
+                            id="ecgCanvas"
+                            aria-label="ECG Signal"
+                        ></canvas>
+
+
+                        <div
+                            id="ecgOverlay"
+                            class="ecg-overlay"
+                        >
+
+                            <span
+                                id="ecgOverlayIcon"
+                                class="overlay-status-dot"
+                            ></span>
+
+                            <span id="ecgOverlayText">
+                                آماده دریافت سیگنال
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =========================================
+                         SIGNAL INFORMATION
+                         ========================================= -->
+
+                    <div class="signal-info">
+
+                        <div>
+
+                            <span>
+                                Sampling
+                            </span>
+
+                            <strong>
+                                128 Hz
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                اتصال
+                            </span>
+
+                            <strong id="connectionStatus">
+                                آماده
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                پردازش
+                            </span>
+
+                            <strong id="processingStatus">
+                                انتظار
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 AUTHENTICATION STEPS
+                 ================================================= -->
+
+            <div class="card steps-card">
+
+                <div class="section-heading">
+
+                    <span class="eyebrow">
+                        AUTHENTICATION PROCESS
+                    </span>
+
+                    <h2>
+                        مراحل سیستم
+                    </h2>
+
+                </div>
+
+
+                <div class="steps">
+
+
+                    <div
+                        class="step active"
+                        id="step1"
+                    >
+
+                        <span>
+                            01
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                اتصال
+                            </strong>
+
+                            <small>
+                                بررسی دستگاه
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="step"
+                        id="step2"
+                    >
+
+                        <span>
+                            02
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                ثبت ECG
+                            </strong>
+
+                            <small>
+                                دریافت سیگنال
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="step"
+                        id="step3"
+                    >
+
+                        <span>
+                            03
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                تحلیل
+                            </strong>
+
+                            <small>
+                                CNN + Feature Vector
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="step"
+                        id="step4"
+                    >
+
+                        <span>
+                            04
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                نتیجه
+                            </strong>
+
+                            <small>
+                                تصمیم احراز هویت
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             ENROLL PAGE
+             ================================================= -->
+
+        <section
+            id="enrollPage"
+            class="mode-page hidden"
+        >
+
+            <div class="enroll-grid">
+
+
+                <!-- =============================================
+                     NEW USER
+                     ============================================= -->
+
+                <div class="card enroll-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <span class="eyebrow">
+                                NEW USER
+                            </span>
+
+                            <h2>
+                                ثبت کاربر جدید
+                            </h2>
+
+                            <p>
+                                برای ایجاد الگوی بیومتریک جدید،
+                                نام کاربر را وارد کرده و فرآیند ثبت
+                                سیگنال ECG را آغاز کنید.
+                            </p>
+
+                        </div>
+
+
+                        <div class="minimal-mark enroll-mark">
+
+                            <span></span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =========================================
+                         USERNAME
+                         ========================================= -->
+
+                    <div class="input-container">
+
+                        <label
+                            for="enrollUsername"
+                        >
+                            نام کاربر جدید
+                        </label>
+
+                        <input
+                            id="enrollUsername"
+                            type="text"
+                            placeholder="نام کاربری را وارد کنید"
+                            autocomplete="off"
+                        >
+
+                    </div>
+
+
+
+                    <!-- =========================================
+                         RECORD INFORMATION
+                         ========================================= -->
+
+                    <div class="enroll-note">
+
+                        <div class="note-marker"></div>
+
+                        <div>
+
+                            <strong>
+                                شرایط ثبت
+                            </strong>
+
+                            <p>
+                                در طول ثبت سیگنال تا حد امکان
+                                ثابت بمانید و اتصال الکترودها
+                                را حفظ کنید.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =========================================
+                         ENROLL BUTTON
+                         ========================================= -->
+
+                    <button
+                        id="enrollButton"
+                        class="primary-button"
+                        onclick="startEnrollment()"
+                        type="button"
+                    >
+
+                        <span class="button-line"></span>
+
+                        شروع ثبت کاربر
+
+                    </button>
+
+
+
+                    <!-- =========================================
+                         ENROLL RESULT
+                         ========================================= -->
+
+                    <div
+                        id="enrollResult"
+                        class="result-box hidden"
+                    >
+
+                        <div
+                            id="enrollResultIcon"
+                            class="result-indicator"
+                        ></div>
+
+                        <div>
+
+                            <h3 id="enrollResultTitle">
+                                ---
+                            </h3>
+
+                            <p id="enrollResultMessage">
+                                ---
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =============================================
+                     ENROLLMENT ECG MONITOR
+                     ============================================= -->
+
+                <div class="card enroll-monitor-card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <span class="eyebrow">
+                                LIVE ACQUISITION
+                            </span>
+
+                            <h2>
+                                دریافت سیگنال ECG
+                            </h2>
+
+                            <p>
+                                سیگنال در طول فرآیند ثبت
+                                به‌صورت زنده نمایش داده می‌شود.
+                            </p>
+
+                        </div>
+
+
+                        <div
+                            class="live-badge"
+                            id="enrollLiveBadge"
+                        >
+
+                            <span
+                                class="live-dot"
+                                id="enrollLiveDot"
+                            ></span>
+
+                            <span id="enrollLiveText">
+                                READY
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =========================================
+                         ENROLL ECG
+                         ========================================= -->
+
+                    <div class="ecg-box enroll-ecg-box">
+
+                        <div class="ecg-grid"></div>
+
+                        <canvas
+                            id="enrollEcgCanvas"
+                            aria-label="Enrollment ECG Signal"
+                        ></canvas>
+
+
+                        <div
+                            id="enrollEcgOverlay"
+                            class="ecg-overlay"
+                        >
+
+                            <span class="overlay-status-dot"></span>
+
+                            <span id="enrollEcgOverlayText">
+                                آماده دریافت سیگنال
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =========================================
+                         ENROLL SIGNAL INFO
+                         ========================================= -->
+
+                    <div class="signal-info">
+
+                        <div>
+
+                            <span>
+                                Sampling
+                            </span>
+
+                            <strong>
+                                128 Hz
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                مدت ثبت
+                            </span>
+
+                            <strong>
+                                35 sec
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                داده مفید
+                            </span>
+
+                            <strong>
+                                25 sec
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 ENROLLMENT PROCESS
+                 ================================================= -->
+
+            <div class="card enroll-process-card">
+
+                <div class="section-heading">
+
+                    <span class="eyebrow">
+                        ENROLLMENT PROCESS
+                    </span>
+
+                    <h2>
+                        مراحل ثبت الگوی بیومتریک
+                    </h2>
+
+                </div>
+
+
+                <div class="enroll-steps">
+
+
+                    <div class="enroll-step">
+
+                        <span>
+                            01
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                اتصال سنسور
+                            </strong>
+
+                            <p>
+                                بررسی اتصال Arduino و MAX30003
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="enroll-step">
+
+                        <span>
+                            02
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                دریافت ECG
+                            </strong>
+
+                            <p>
+                                ثبت سیگنال قلبی در طول فرآیند
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="enroll-step">
+
+                        <span>
+                            03
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                استخراج ویژگی
+                            </strong>
+
+                            <p>
+                                تولید بردار ویژگی توسط شبکه CNN
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="enroll-step">
+
+                        <span>
+                            04
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                ذخیره Template
+                            </strong>
+
+                            <p>
+                                ذخیره الگوی بیومتریک کاربر
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             FOOTER
+             ================================================= -->
+
+        <footer>
+
+            <span>
+                ECG Smart Lock
+            </span>
+
+            <span>
+                MAX30003&nbsp;&nbsp;•&nbsp;&nbsp;
+                Arduino Uno&nbsp;&nbsp;•&nbsp;&nbsp;
+                PyTorch CNN
+            </span>
+
+        </footer>
+
+    </main>
+
+
+
+    <!-- =====================================================
+         SCRIPT
+         ===================================================== -->
+
+    <script
+        src="{{ url_for('static', filename='script.js') }}"
+    ></script>
+
+</body>
+
+</html>

@@ -1,0 +1,1499 @@
+/* =========================================================
+   RESET
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* =========================================================
+   BODY
+   ========================================================= */
+
+body {
+
+    min-height: 100vh;
+
+    font-family:
+        "Segoe UI",
+        Tahoma,
+        Arial,
+        sans-serif;
+
+    background:
+
+        radial-gradient(
+            circle at 12% 8%,
+            rgba(45, 212, 191, .08),
+            transparent 28%
+        ),
+
+        radial-gradient(
+            circle at 88% 92%,
+            rgba(45, 212, 191, .045),
+            transparent 30%
+        ),
+
+        #070d10;
+
+    color: #e8f5f4;
+
+    overflow-x: hidden;
+}
+
+
+/* =========================================================
+   BACKGROUND GLOW
+   ========================================================= */
+
+.background-glow {
+
+    position: fixed;
+
+    width: 360px;
+    height: 360px;
+
+    border-radius: 50%;
+
+    filter: blur(120px);
+
+    pointer-events: none;
+
+    opacity: .08;
+
+    z-index: -1;
+}
+
+
+.glow-1 {
+
+    top: -190px;
+    right: -120px;
+
+    background: #2dd4bf;
+}
+
+
+.glow-2 {
+
+    bottom: -200px;
+    left: -120px;
+
+    background: #2dd4bf;
+}
+
+
+/* =========================================================
+   PAGE
+   ========================================================= */
+
+.page {
+
+    width: min(1180px, 92%);
+
+    margin: auto;
+
+    padding:
+        34px 0 24px;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 25px;
+}
+
+
+.brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+}
+
+
+.logo {
+
+    width: 52px;
+    height: 52px;
+
+    border-radius: 15px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background:
+        rgba(45, 212, 191, .045);
+
+    border:
+        1px solid
+        rgba(45, 212, 191, .20);
+}
+
+
+.logo svg {
+
+    width: 38px;
+    height: 38px;
+
+    fill: none;
+
+    stroke: #43d5c0;
+
+    stroke-width: 3.5;
+
+    stroke-linecap: round;
+
+    stroke-linejoin: round;
+}
+
+
+.brand h1 {
+
+    font-size: 22px;
+
+    font-weight: 700;
+
+    letter-spacing: -.3px;
+}
+
+
+.brand p {
+
+    margin-top: 5px;
+
+    color: #657b7e;
+
+    font-size: 11px;
+}
+
+
+.system-status {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color: #718689;
+
+    font-size: 10px;
+}
+
+
+.status-dot {
+
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #43d5c0;
+
+    box-shadow:
+        0 0 10px
+        rgba(67, 213, 192, .65);
+}
+
+
+/* =========================================================
+   MODE SELECTOR
+   ========================================================= */
+
+.mode-selector {
+
+    display: inline-flex;
+
+    gap: 4px;
+
+    padding: 4px;
+
+    margin-bottom: 18px;
+
+    background:
+        rgba(255, 255, 255, .018);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, .065);
+
+    border-radius: 13px;
+}
+
+
+.mode-button {
+
+    border: none;
+
+    padding:
+        10px 16px;
+
+    border-radius: 9px;
+
+    color: #647a7d;
+
+    background: transparent;
+
+    cursor: pointer;
+
+    font-size: 11px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    transition:
+        background .2s ease,
+        color .2s ease;
+}
+
+
+.mode-button:hover {
+
+    color: #b6cfcd;
+
+    background:
+        rgba(255, 255, 255, .025);
+}
+
+
+.mode-button.active {
+
+    color: #081312;
+
+    background: #43d5c0;
+
+    font-weight: 700;
+}
+
+
+.mode-number {
+
+    font-size: 8px;
+
+    letter-spacing: 1px;
+
+    opacity: .75;
+}
+
+
+/* =========================================================
+   MODE PAGE
+   ========================================================= */
+
+.mode-page {
+
+    width: 100%;
+}
+
+
+.hidden {
+
+    display: none !important;
+}
+
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+.card {
+
+    background:
+        rgba(12, 21, 24, .90);
+
+    border:
+        1px solid
+        rgba(133, 176, 178, .10);
+
+    border-radius: 19px;
+
+    padding: 24px;
+
+    box-shadow:
+        0 18px 45px
+        rgba(0, 0, 0, .16);
+
+    backdrop-filter: blur(16px);
+}
+
+
+.main-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, .95fr)
+        minmax(0, 1.05fr);
+
+    gap: 16px;
+}
+
+
+.card-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    gap: 18px;
+
+    margin-bottom: 21px;
+}
+
+
+.eyebrow {
+
+    display: block;
+
+    color: #42cbb9;
+
+    font-size: 8px;
+
+    letter-spacing: 2px;
+
+    font-weight: 800;
+}
+
+
+h2 {
+
+    margin-top: 6px;
+
+    font-size: 19px;
+
+    font-weight: 700;
+
+    letter-spacing: -.2px;
+}
+
+
+.card p {
+
+    color: #6d8386;
+
+    font-size: 11px;
+
+    line-height: 1.85;
+
+    margin-top: 6px;
+}
+
+
+/* =========================================================
+   MINIMAL MARK
+   ========================================================= */
+
+.minimal-mark {
+
+    width: 44px;
+    height: 44px;
+
+    border-radius: 13px;
+
+    border:
+        1px solid
+        rgba(65, 211, 190, .16);
+
+    background:
+        rgba(45, 212, 191, .035);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+}
+
+
+.minimal-mark span {
+
+    width: 10px;
+    height: 10px;
+
+    border-radius: 50%;
+
+    border:
+        2px solid
+        #43d5c0;
+
+    box-shadow:
+        0 0 0 5px
+        rgba(67, 213, 192, .06);
+}
+
+
+.enroll-mark span {
+
+    width: 8px;
+    height: 8px;
+}
+
+
+/* =========================================================
+   AUTHENTICATION INFO
+   ========================================================= */
+
+.authentication-info {
+
+    display: flex;
+
+    align-items: stretch;
+
+    gap: 11px;
+
+    margin-top: 4px;
+
+    margin-bottom: 17px;
+
+    padding: 12px 13px;
+
+    border-radius: 12px;
+
+    background:
+        rgba(45, 212, 191, .025);
+
+    border:
+        1px solid
+        rgba(45, 212, 191, .07);
+}
+
+
+.info-line {
+
+    width: 2px;
+
+    border-radius: 5px;
+
+    background: #36c5b1;
+
+    opacity: .7;
+}
+
+
+.authentication-info strong {
+
+    display: block;
+
+    color: #a8c2c0;
+
+    font-size: 10px;
+}
+
+
+.authentication-info p {
+
+    margin-top: 3px;
+
+    color: #62787b;
+
+    font-size: 9px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   BUTTON
+   ========================================================= */
+
+.primary-button {
+
+    width: 100%;
+
+    height: 51px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: #43d5c0;
+
+    color: #071312;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        background .2s ease;
+}
+
+
+.primary-button:hover {
+
+    transform: translateY(-1px);
+
+    background: #4bdfca;
+
+    box-shadow:
+        0 10px 28px
+        rgba(45, 212, 191, .13);
+}
+
+
+.primary-button:active {
+
+    transform: translateY(0);
+}
+
+
+.primary-button:disabled {
+
+    opacity: .35;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow: none;
+}
+
+
+.primary-button.loading {
+
+    cursor: wait;
+
+    opacity: .60;
+}
+
+
+.button-line {
+
+    width: 18px;
+    height: 1px;
+
+    background: rgba(7, 19, 18, .45);
+}
+
+
+/* =========================================================
+   RESULT
+   ========================================================= */
+
+.result-box {
+
+    margin-top: 14px;
+
+    padding: 13px;
+
+    display: flex;
+
+    gap: 11px;
+
+    align-items: center;
+
+    border-radius: 12px;
+
+    background:
+        rgba(255, 255, 255, .018);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, .055);
+}
+
+
+.result-indicator {
+
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: #687b7d;
+
+    flex-shrink: 0;
+}
+
+
+.result-box.success {
+
+    border-color:
+        rgba(55, 215, 188, .22);
+
+    background:
+        rgba(45, 212, 191, .035);
+}
+
+
+.result-box.success
+.result-indicator {
+
+    background: #43d5c0;
+
+    box-shadow:
+        0 0 10px
+        rgba(67, 213, 192, .6);
+}
+
+
+.result-box.denied {
+
+    border-color:
+        rgba(255, 100, 100, .22);
+
+    background:
+        rgba(255, 80, 80, .035);
+}
+
+
+.result-box.denied
+.result-indicator {
+
+    background: #e87979;
+}
+
+
+.result-box h3 {
+
+    font-size: 12px;
+}
+
+
+.result-box p {
+
+    margin-top: 3px;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   DETECTED USER
+   ========================================================= */
+
+.detected-user {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    margin-top: 12px;
+
+    padding: 11px 13px;
+
+    border-radius: 12px;
+
+    background:
+        rgba(45, 212, 191, .025);
+
+    border:
+        1px solid
+        rgba(45, 212, 191, .09);
+}
+
+
+.detected-user-line {
+
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #43d5c0;
+}
+
+
+.detected-user div {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+
+.detected-user div span {
+
+    color: #5f7779;
+
+    font-size: 8px;
+}
+
+
+.detected-user div strong {
+
+    color: #b6d6d2;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   ECG MONITOR
+   ========================================================= */
+
+.ecg-box {
+
+    position: relative;
+
+    height: 252px;
+
+    overflow: hidden;
+
+    border-radius: 13px;
+
+    background: #050c0f;
+
+    border:
+        1px solid
+        rgba(65, 180, 170, .11);
+}
+
+
+.ecg-grid {
+
+    position: absolute;
+
+    inset: 0;
+
+    background-image:
+
+        linear-gradient(
+            rgba(62, 151, 143, .055) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(62, 151, 143, .055) 1px,
+            transparent 1px
+        );
+
+    background-size:
+        25px 25px;
+
+    pointer-events: none;
+}
+
+
+.ecg-box canvas {
+
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    z-index: 2;
+}
+
+
+/* =========================================================
+   ECG OVERLAY
+   ========================================================= */
+
+.ecg-overlay {
+
+    position: absolute;
+
+    left: 50%;
+    bottom: 12px;
+
+    transform:
+        translateX(-50%);
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding:
+        6px 10px;
+
+    border-radius: 18px;
+
+    background:
+        rgba(3, 11, 14, .76);
+
+    border:
+        1px solid
+        rgba(72, 214, 194, .08);
+
+    color: #627b7e;
+
+    font-size: 8px;
+
+    white-space: nowrap;
+
+    backdrop-filter: blur(8px);
+
+    z-index: 5;
+}
+
+
+.overlay-status-dot {
+
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background: #596d70;
+}
+
+
+.ecg-overlay.live
+.overlay-status-dot {
+
+    background: #43d5c0;
+
+    box-shadow:
+        0 0 8px
+        rgba(67, 213, 192, .8);
+
+    animation:
+        pulse 1.2s infinite;
+}
+
+
+@keyframes pulse {
+
+    50% {
+        opacity: .3;
+    }
+}
+
+
+/* =========================================================
+   LIVE BADGE
+   ========================================================= */
+
+.live-badge {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    font-size: 8px;
+
+    color: #667d80;
+
+    padding:
+        6px 9px;
+
+    border-radius: 16px;
+
+    background:
+        rgba(255, 255, 255, .018);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, .045);
+
+    letter-spacing: .6px;
+}
+
+
+.live-dot {
+
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background: #53696c;
+}
+
+
+.live-dot.active {
+
+    background: #43d5c0;
+
+    box-shadow:
+        0 0 9px
+        rgba(67, 213, 192, .75);
+
+    animation:
+        pulse 1s infinite;
+}
+
+
+/* =========================================================
+   SIGNAL INFORMATION
+   ========================================================= */
+
+.signal-info {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 7px;
+
+    margin-top: 10px;
+}
+
+
+.signal-info > div {
+
+    padding: 10px;
+
+    border-radius: 10px;
+
+    background:
+        rgba(255, 255, 255, .018);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, .025);
+}
+
+
+.signal-info span {
+
+    display: block;
+
+    color: #536b6e;
+
+    font-size: 8px;
+
+    margin-bottom: 4px;
+}
+
+
+.signal-info strong {
+
+    color: #a8c2c3;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   STEPS
+   ========================================================= */
+
+.steps-card {
+
+    margin-top: 16px;
+}
+
+
+.section-heading {
+
+    margin-bottom: 18px;
+}
+
+
+.steps {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 8px;
+}
+
+
+.step {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 11px;
+
+    border-radius: 11px;
+
+    background:
+        rgba(255, 255, 255, .016);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, .035);
+
+    transition:
+        border-color .2s ease,
+        background .2s ease;
+}
+
+
+.step > span {
+
+    min-width: 30px;
+
+    height: 30px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background:
+        rgba(255, 255, 255, .025);
+
+    color: #52696c;
+
+    font-size: 8px;
+
+    font-weight: 700;
+}
+
+
+.step strong {
+
+    display: block;
+
+    font-size: 10px;
+}
+
+
+.step small {
+
+    display: block;
+
+    color: #526a6d;
+
+    margin-top: 2px;
+
+    font-size: 8px;
+}
+
+
+.step.active {
+
+    border-color:
+        rgba(45, 212, 191, .16);
+
+    background:
+        rgba(45, 212, 191, .022);
+}
+
+
+.step.active > span {
+
+    color: #43d5c0;
+
+    background:
+        rgba(45, 212, 191, .07);
+}
+
+
+/* =========================================================
+   ENROLL
+   ========================================================= */
+
+.enroll-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, .85fr)
+        minmax(0, 1.15fr);
+
+    gap: 16px;
+}
+
+
+.enroll-card {
+
+    text-align: right;
+}
+
+
+/* =========================================================
+   INPUT
+   ========================================================= */
+
+.input-container {
+
+    margin-top: 21px;
+
+    margin-bottom: 14px;
+}
+
+
+.input-container label {
+
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #9eb5b7;
+
+    font-size: 10px;
+}
+
+
+input {
+
+    width: 100%;
+
+    height: 50px;
+
+    padding:
+        0 14px;
+
+    border-radius: 11px;
+
+    border:
+        1px solid
+        rgba(126, 167, 170, .13);
+
+    background:
+        rgba(3, 12, 15, .72);
+
+    color: #edf8f6;
+
+    outline: none;
+
+    font-size: 12px;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+
+input:focus {
+
+    border-color:
+        rgba(60, 202, 184, .55);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(60, 202, 184, .055);
+}
+
+
+input::placeholder {
+
+    color: #455c5f;
+}
+
+
+/* =========================================================
+   ENROLL NOTE
+   ========================================================= */
+
+.enroll-note {
+
+    display: flex;
+
+    gap: 10px;
+
+    padding: 11px 12px;
+
+    margin-bottom: 15px;
+
+    border-radius: 11px;
+
+    background:
+        rgba(255, 255, 255, .016);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, .035);
+}
+
+
+.note-marker {
+
+    width: 5px;
+
+    min-width: 5px;
+
+    height: 5px;
+
+    margin-top: 5px;
+
+    border-radius: 50%;
+
+    background: #43d5c0;
+}
+
+
+.enroll-note strong {
+
+    display: block;
+
+    color: #9eb8b8;
+
+    font-size: 9px;
+}
+
+
+.enroll-note p {
+
+    margin-top: 3px;
+
+    color: #5d7376;
+
+    font-size: 8px;
+
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   ENROLL ECG
+   ========================================================= */
+
+.enroll-monitor-card {
+
+    min-width: 0;
+}
+
+
+.enroll-ecg-box {
+
+    height: 252px;
+}
+
+
+/* =========================================================
+   ENROLL PROCESS
+   ========================================================= */
+
+.enroll-process-card {
+
+    margin-top: 16px;
+}
+
+
+.enroll-steps {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 8px;
+}
+
+
+.enroll-step {
+
+    display: flex;
+
+    gap: 10px;
+
+    padding: 12px;
+
+    border-radius: 11px;
+
+    background:
+        rgba(255, 255, 255, .016);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, .035);
+}
+
+
+.enroll-step > span {
+
+    min-width: 30px;
+
+    height: 30px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    color: #43cdb9;
+
+    background:
+        rgba(45, 212, 191, .055);
+
+    font-size: 8px;
+
+    font-weight: 700;
+}
+
+
+.enroll-step strong {
+
+    display: block;
+
+    color: #a7bfc0;
+
+    font-size: 10px;
+}
+
+
+.enroll-step p {
+
+    margin-top: 3px;
+
+    color: #566d70;
+
+    font-size: 8px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+footer {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-top: 16px;
+
+    color: #43585b;
+
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .main-grid,
+    .enroll-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .steps,
+    .enroll-steps {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .page {
+
+        width: 94%;
+
+        padding-top: 22px;
+    }
+
+
+    .header {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 13px;
+    }
+
+
+    .brand h1 {
+
+        font-size: 20px;
+    }
+
+
+    .mode-selector {
+
+        width: 100%;
+    }
+
+
+    .mode-button {
+
+        flex: 1;
+
+        justify-content: center;
+    }
+
+
+    .card {
+
+        padding: 18px;
+
+        border-radius: 16px;
+    }
+
+
+    .steps,
+    .enroll-steps {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .signal-info {
+
+        grid-template-columns:
+            repeat(3, 1fr);
+    }
+
+
+    .ecg-box,
+    .enroll-ecg-box {
+
+        height: 220px;
+    }
+
+
+    footer {
+
+        flex-direction: column;
+
+        gap: 5px;
+
+        line-height: 1.6;
+    }
+}

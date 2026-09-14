@@ -8,9 +8,6 @@ import neurokit2 as nk
 from scipy.signal import butter, sosfiltfilt
 
 
-# ---------------------------------
-# 1. مسیر پروژه
-# ---------------------------------
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 
@@ -28,10 +25,6 @@ record_path = (
 )
 
 
-# ---------------------------------
-# 2. خواندن ECG خام
-# ---------------------------------
-
 record = wfdb.rdrecord(str(record_path))
 
 fs = record.fs
@@ -39,9 +32,6 @@ fs = record.fs
 raw_ecg = record.p_signal[:, 0]
 
 
-# ---------------------------------
-# 3. Band-pass Filter
-# ---------------------------------
 
 def bandpass_filter(
     signal,
@@ -71,19 +61,12 @@ filtered_ecg = bandpass_filter(
 )
 
 
-# ---------------------------------
-# 4. Z-score
-# ---------------------------------
-
 normalized_ecg = (
     filtered_ecg
     - np.mean(filtered_ecg)
 ) / np.std(filtered_ecg)
 
 
-# ---------------------------------
-# 5. R-Peak Detection
-# ---------------------------------
 
 signals, info = nk.ecg_peaks(
     normalized_ecg,
@@ -101,9 +84,6 @@ print(
 )
 
 
-# ---------------------------------
-# 6. تعیین اندازه Beat
-# ---------------------------------
 
 before_r_seconds = 0.2
 after_r_seconds = 0.4
@@ -127,9 +107,6 @@ print(
 )
 
 
-# ---------------------------------
-# 7. استخراج Beatها
-# ---------------------------------
 
 beats = []
 
@@ -148,7 +125,6 @@ for r_peak in r_peaks:
         + after_r_samples
     )
 
-    # بررسی مرز سیگنال
     if start < 0:
         continue
 
@@ -169,9 +145,6 @@ for r_peak in r_peaks:
 beats = np.array(beats)
 
 
-# ---------------------------------
-# 8. اطلاعات نهایی
-# ---------------------------------
 
 print(
     "\nValid beats:",
@@ -184,9 +157,6 @@ print(
 )
 
 
-# ---------------------------------
-# 9. نمایش چند Beat
-# ---------------------------------
 
 number_to_show = min(
     6,

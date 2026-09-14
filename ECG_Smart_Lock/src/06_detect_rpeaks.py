@@ -8,9 +8,6 @@ import neurokit2 as nk
 from scipy.signal import butter, sosfiltfilt
 
 
-# ---------------------------------
-# 1. مسیر پروژه
-# ---------------------------------
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 
@@ -28,10 +25,6 @@ record_path = (
 )
 
 
-# ---------------------------------
-# 2. خواندن ECG خام
-# ---------------------------------
-
 record = wfdb.rdrecord(str(record_path))
 
 fs = record.fs
@@ -39,9 +32,6 @@ fs = record.fs
 raw_ecg = record.p_signal[:, 0]
 
 
-# ---------------------------------
-# 3. Band-pass Filter
-# ---------------------------------
 
 def bandpass_filter(
     signal,
@@ -71,9 +61,6 @@ filtered_ecg = bandpass_filter(
 )
 
 
-# ---------------------------------
-# 4. Z-score
-# ---------------------------------
 
 normalized_ecg = (
     filtered_ecg
@@ -81,9 +68,6 @@ normalized_ecg = (
 ) / np.std(filtered_ecg)
 
 
-# ---------------------------------
-# 5. پیدا کردن R-Peak
-# ---------------------------------
 
 signals, info = nk.ecg_peaks(
     normalized_ecg,
@@ -95,9 +79,6 @@ signals, info = nk.ecg_peaks(
 r_peaks = info["ECG_R_Peaks"]
 
 
-# ---------------------------------
-# 6. نمایش اطلاعات
-# ---------------------------------
 
 print("Sampling rate:", fs)
 
@@ -113,7 +94,6 @@ print(
 print(r_peaks)
 
 
-# تبدیل شماره Sample به زمان
 r_peak_times = r_peaks / fs
 
 print(
@@ -123,9 +103,6 @@ print(
 print(r_peak_times)
 
 
-# ---------------------------------
-# 7. محاسبه ضربان تقریبی
-# ---------------------------------
 
 duration_seconds = len(
     normalized_ecg
@@ -143,18 +120,12 @@ print(
 )
 
 
-# ---------------------------------
-# 8. محور زمان
-# ---------------------------------
 
 time = np.arange(
     len(normalized_ecg)
 ) / fs
 
 
-# ---------------------------------
-# 9. رسم ECG + R-Peakها
-# ---------------------------------
 
 plt.figure(
     figsize=(16, 5)

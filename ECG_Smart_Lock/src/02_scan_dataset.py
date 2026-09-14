@@ -3,9 +3,6 @@ import pandas as pd
 import wfdb
 
 
-# -------------------------------
-# 1. مسیر اصلی پروژه
-# -------------------------------
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 
@@ -17,31 +14,21 @@ DATASET_DIR = (
 )
 
 
-# -------------------------------
-# 2. لیست برای ذخیره اطلاعات
-# -------------------------------
-
 records_info = []
 
 
-# -------------------------------
-# 3. پیدا کردن تمام Personها
-# -------------------------------
 
 person_folders = sorted(DATASET_DIR.glob("Person_*"))
 
 print("Number of persons:", len(person_folders))
 
 
-# -------------------------------
-# 4. بررسی تک تک افراد
-# -------------------------------
 
 for person_folder in person_folders:
 
     person_id = person_folder.name
 
-    # فقط فایل‌های .hea را پیدا می‌کنیم
+
     header_files = sorted(person_folder.glob("rec_*.hea"))
 
     print(person_id, "→", len(header_files), "records")
@@ -50,7 +37,6 @@ for person_folder in person_folders:
 
         record_id = header_file.stem
 
-        # wfdb پسوند .hea نمی‌خواهد
         record_path = person_folder / record_id
 
         try:
@@ -72,24 +58,13 @@ for person_folder in person_folders:
             print("ERROR:", person_id, record_id, e)
 
 
-# -------------------------------
-# 5. تبدیل اطلاعات به جدول
-# -------------------------------
-
 df = pd.DataFrame(records_info)
 
 
-# -------------------------------
-# 6. نمایش چند سطر اول
-# -------------------------------
 
 print("\nFirst records:")
 print(df.head())
 
-
-# -------------------------------
-# 7. آمار کلی
-# -------------------------------
 
 print("\nTotal persons:")
 print(df["person_id"].nunique())
@@ -98,9 +73,6 @@ print("\nTotal records:")
 print(len(df))
 
 
-# -------------------------------
-# 8. تعداد Record هر فرد
-# -------------------------------
 
 records_per_person = (
     df.groupby("person_id")
@@ -112,9 +84,6 @@ print("\nRecords per person:")
 print(records_per_person)
 
 
-# -------------------------------
-# 9. ذخیره CSV
-# -------------------------------
 
 results_dir = PROJECT_DIR / "results"
 

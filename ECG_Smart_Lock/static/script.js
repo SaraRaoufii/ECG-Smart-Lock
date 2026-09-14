@@ -286,7 +286,7 @@ function drawECGGrid(
     // Background
     // -----------------------------------------------------
 
-    ctx.fillStyle = "#08191b";
+    ctx.fillStyle = "#f0f9ff";
 
     ctx.fillRect(
         0,
@@ -301,11 +301,11 @@ function drawECGGrid(
     // -----------------------------------------------------
 
     ctx.strokeStyle =
-        "rgba(66, 217, 189, 0.07)";
+        "rgba(59, 130, 246, 0.08)";
 
     ctx.lineWidth = 1;
 
-    const smallGrid = 20;
+    const smallGrid = 40;
 
     // Vertical lines
 
@@ -360,9 +360,9 @@ function drawECGGrid(
     // -----------------------------------------------------
 
     ctx.strokeStyle =
-        "rgba(66, 217, 189, 0.13)";
+        "rgba(59, 130, 246, 0.12)";
 
-    const largeGrid = 100;
+    const largeGrid = 160;
 
     // Vertical lines
 
@@ -544,16 +544,22 @@ function drawECGOnCanvas(
 
     ctx.beginPath();
 
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 2.5;
 
     ctx.strokeStyle =
-        "#42d9bd";
+        "#06b6d4";
 
     ctx.lineJoin =
         "round";
 
     ctx.lineCap =
         "round";
+
+    ctx.shadowColor =
+        "rgba(6, 182, 212, 0.5)";
+
+    ctx.shadowBlur =
+        12;
 
 
     for (
@@ -600,6 +606,9 @@ function drawECGOnCanvas(
 
     ctx.stroke();
 
+    ctx.shadowColor = "transparent";
+    ctx.shadowBlur = 0;
+
 
     // -----------------------------------------------------
     // Current Signal Point
@@ -631,17 +640,26 @@ function drawECGOnCanvas(
     ctx.beginPath();
 
     ctx.fillStyle =
-        "#ffffff";
+        "#06b6d4";
+
+    ctx.shadowColor =
+        "rgba(6, 182, 212, 0.6)";
+
+    ctx.shadowBlur =
+        16;
 
     ctx.arc(
         lastX,
         lastY,
-        2.5,
+        5,
         0,
         Math.PI * 2
     );
 
     ctx.fill();
+
+    ctx.shadowColor = "transparent";
+    ctx.shadowBlur = 0;
 }
 
 
@@ -1929,18 +1947,18 @@ function setSystem(
     if (active) {
 
         dot.style.background =
-            "#42d9bd";
+            "#10C98A";
 
         dot.style.boxShadow =
-            "0 0 12px rgba(66,217,189,.8)";
+            "0 0 12px rgba(16,201,138,.8)";
     }
     else {
 
         dot.style.background =
-            "#ef7070";
+            "#ef4444";
 
         dot.style.boxShadow =
-            "0 0 12px rgba(239,112,112,.7)";
+            "0 0 12px rgba(239,68,68,.7)";
     }
 }
 
@@ -1988,6 +2006,42 @@ function setLive(
         dot.classList.remove(
             "active"
         );
+    }
+
+
+    // Update enroll live badge if exists
+    const enrollLiveText =
+        document.getElementById(
+            "enrollLiveText"
+        );
+
+    const enrollLiveDot =
+        document.getElementById(
+            "enrollLiveDot"
+        );
+
+
+    if (enrollLiveText) {
+
+        enrollLiveText.textContent =
+            text;
+    }
+
+
+    if (enrollLiveDot) {
+
+        if (active) {
+
+            enrollLiveDot.classList.add(
+                "active"
+            );
+        }
+        else {
+
+            enrollLiveDot.classList.remove(
+                "active"
+            );
+        }
     }
 }
 
@@ -2058,7 +2112,7 @@ function showECGOverlay(
     const overlayText =
         document.getElementById(
             "ecgOverlayText"
-        );
+    );
 
 
     if (!overlay) {
@@ -2097,6 +2151,60 @@ function showECGOverlay(
 
         overlayText.textContent =
             text;
+    }
+
+
+    // -----------------------------------------------------
+    // Live state
+    // -----------------------------------------------------
+
+    if (
+        text.includes("دریافت") ||
+        text.includes("ضبط") ||
+        text.includes("پردازش") ||
+        text.includes("تحلیل") ||
+        text.includes("دسترسی")
+    ) {
+        overlay.classList.add("live");
+    }
+    else {
+        overlay.classList.remove("live");
+    }
+
+
+    // -----------------------------------------------------
+    // Update enrollment overlay if exists
+    // -----------------------------------------------------
+
+    const enrollOverlay =
+        document.getElementById(
+            "enrollEcgOverlay"
+        );
+
+    const enrollOverlayText =
+        document.getElementById(
+            "enrollEcgOverlayText"
+        );
+
+
+    if (enrollOverlay && enrollOverlayText) {
+
+        enrollOverlayText.textContent =
+            text;
+
+
+        if (
+            text.includes("دریافت") ||
+            text.includes("ضبط") ||
+            text.includes("پردازش") ||
+            text.includes("تحلیل") ||
+            text.includes("دسترسی")
+        ) {
+            enrollOverlay.classList.add("live");
+        }
+        else {
+            enrollOverlay.classList.remove("live");
+        }
     }
 }
 

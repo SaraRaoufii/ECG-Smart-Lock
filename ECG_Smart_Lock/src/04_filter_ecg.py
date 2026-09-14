@@ -7,10 +7,6 @@ import matplotlib.pyplot as plt
 from scipy.signal import butter, sosfiltfilt
 
 
-# ---------------------------------
-# 1. مسیر پروژه و دیتاست
-# ---------------------------------
-
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 
 DATASET_DIR = (
@@ -27,28 +23,19 @@ record_path = (
 )
 
 
-# ---------------------------------
-# 2. خواندن ECG
-# ---------------------------------
 
 record = wfdb.rdrecord(str(record_path))
 
 fs = record.fs
 
-# کانال صفر = ECG خام
 raw_ecg = record.p_signal[:, 0]
 
-# کانال یک = نسخه Filtered خود ECG-ID
 official_filtered = record.p_signal[:, 1]
 
 
 print("Sampling rate:", fs)
 print("Samples:", len(raw_ecg))
 
-
-# ---------------------------------
-# 3. تابع Band-pass Filter
-# ---------------------------------
 
 def bandpass_filter(
     signal,
@@ -74,9 +61,6 @@ def bandpass_filter(
     return filtered_signal
 
 
-# ---------------------------------
-# 4. اعمال Filter خودمان
-# ---------------------------------
 
 our_filtered = bandpass_filter(
     raw_ecg,
@@ -84,16 +68,10 @@ our_filtered = bandpass_filter(
 )
 
 
-# ---------------------------------
-# 5. محور زمان
-# ---------------------------------
 
 time = np.arange(len(raw_ecg)) / fs
 
 
-# ---------------------------------
-# 6. رسم ECG خام
-# ---------------------------------
 
 plt.figure(figsize=(15, 4))
 
@@ -114,9 +92,6 @@ plt.tight_layout()
 plt.show()
 
 
-# ---------------------------------
-# 7. رسم Filter خودمان
-# ---------------------------------
 
 plt.figure(figsize=(15, 4))
 
@@ -137,9 +112,6 @@ plt.tight_layout()
 plt.show()
 
 
-# ---------------------------------
-# 8. مقایسه با Filter رسمی ECG-ID
-# ---------------------------------
 
 plt.figure(figsize=(15, 4))
 

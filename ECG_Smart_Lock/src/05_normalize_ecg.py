@@ -7,9 +7,6 @@ import matplotlib.pyplot as plt
 from scipy.signal import butter, sosfiltfilt
 
 
-# ---------------------------------
-# 1. مسیر پروژه
-# ---------------------------------
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 
@@ -27,9 +24,6 @@ record_path = (
 )
 
 
-# ---------------------------------
-# 2. خواندن ECG خام
-# ---------------------------------
 
 record = wfdb.rdrecord(str(record_path))
 
@@ -38,9 +32,6 @@ fs = record.fs
 raw_ecg = record.p_signal[:, 0]
 
 
-# ---------------------------------
-# 3. فیلتر Band-pass
-# ---------------------------------
 
 def bandpass_filter(
     signal,
@@ -70,10 +61,6 @@ filtered_ecg = bandpass_filter(
 )
 
 
-# ---------------------------------
-# 4. Z-score Normalization
-# ---------------------------------
-
 mean_value = np.mean(filtered_ecg)
 
 std_value = np.std(filtered_ecg)
@@ -83,9 +70,6 @@ normalized_ecg = (
 ) / std_value
 
 
-# ---------------------------------
-# 5. نمایش اطلاعات
-# ---------------------------------
 
 print("Before normalization:")
 print("Mean:", np.mean(filtered_ecg))
@@ -96,18 +80,11 @@ print("Mean:", np.mean(normalized_ecg))
 print("STD :", np.std(normalized_ecg))
 
 
-# ---------------------------------
-# 6. محور زمان
-# ---------------------------------
-
 time = np.arange(
     len(normalized_ecg)
 ) / fs
 
 
-# ---------------------------------
-# 7. نمودار قبل از Normalization
-# ---------------------------------
 
 plt.figure(figsize=(15, 4))
 
@@ -127,9 +104,6 @@ plt.tight_layout()
 plt.show()
 
 
-# ---------------------------------
-# 8. نمودار بعد از Normalization
-# ---------------------------------
 
 plt.figure(figsize=(15, 4))
 

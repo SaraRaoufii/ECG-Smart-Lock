@@ -8,10 +8,6 @@ import neurokit2 as nk
 from scipy.signal import butter, sosfiltfilt
 
 
-# =========================================================
-# 1. مسیر دیتاست
-# =========================================================
-
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 
 DATASET_DIR = (
@@ -22,9 +18,6 @@ DATASET_DIR = (
 )
 
 
-# =========================================================
-# 2. فیلتر
-# =========================================================
 
 def bandpass_filter(
     signal,
@@ -48,9 +41,6 @@ def bandpass_filter(
     )
 
 
-# =========================================================
-# 3. Recordهای Person_14
-# =========================================================
 
 records_to_check = [
     "rec_1",
@@ -66,9 +56,6 @@ for record_id in records_to_check:
     print("==============================")
 
 
-    # -----------------------------------------------------
-    # خواندن ECG
-    # -----------------------------------------------------
 
     record_path = (
         DATASET_DIR
@@ -85,9 +72,6 @@ for record_id in records_to_check:
     raw_ecg = record.p_signal[:, 0]
 
 
-    # -----------------------------------------------------
-    # Filter
-    # -----------------------------------------------------
 
     filtered_ecg = bandpass_filter(
         raw_ecg,
@@ -95,19 +79,12 @@ for record_id in records_to_check:
     )
 
 
-    # -----------------------------------------------------
-    # Z-score
-    # -----------------------------------------------------
-
     normalized_ecg = (
         filtered_ecg
         - np.mean(filtered_ecg)
     ) / np.std(filtered_ecg)
 
 
-    # -----------------------------------------------------
-    # Detection روی ECG معمولی
-    # -----------------------------------------------------
 
     signals_normal, info_normal = nk.ecg_peaks(
         normalized_ecg,
@@ -121,12 +98,6 @@ for record_id in records_to_check:
     ]
 
 
-    # -----------------------------------------------------
-    # Detection روی ECG برعکس شده
-    #
-    # فعلاً فقط برای تشخیص علت مشکل است.
-    # -----------------------------------------------------
-
     signals_inverted, info_inverted = nk.ecg_peaks(
         -normalized_ecg,
         sampling_rate=fs,
@@ -139,9 +110,6 @@ for record_id in records_to_check:
     ]
 
 
-    # -----------------------------------------------------
-    # چاپ نتیجه
-    # -----------------------------------------------------
 
     print(
         "Normal signal R-peaks:",
@@ -164,10 +132,6 @@ for record_id in records_to_check:
     )
 
 
-    # -----------------------------------------------------
-    # محور زمان
-    # -----------------------------------------------------
-
     time = (
         np.arange(
             len(normalized_ecg)
@@ -175,10 +139,6 @@ for record_id in records_to_check:
         / fs
     )
 
-
-    # -----------------------------------------------------
-    # نمودار ECG اصلی
-    # -----------------------------------------------------
 
     plt.figure(
         figsize=(16, 5)
@@ -191,7 +151,6 @@ for record_id in records_to_check:
     )
 
 
-    # Rهایی که روی حالت معمولی پیدا شدند
     if len(peaks_normal) > 0:
 
         plt.scatter(
@@ -221,11 +180,6 @@ for record_id in records_to_check:
 
     plt.show()
 
-
-    # -----------------------------------------------------
-    # همان ECG اصلی
-    # ولی نقاطی که با detector معکوس پیدا شدند
-    # -----------------------------------------------------
 
     plt.figure(
         figsize=(16, 5)

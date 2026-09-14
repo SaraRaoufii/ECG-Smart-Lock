@@ -3,10 +3,6 @@ import pandas as pd
 import re
 
 
-# --------------------------------
-# 1. مسیر پروژه
-# --------------------------------
-
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 
 METADATA_FILE = (
@@ -18,19 +14,11 @@ METADATA_FILE = (
 RESULTS_DIR = PROJECT_DIR / "results"
 
 
-# --------------------------------
-# 2. خواندن Metadata
-# --------------------------------
-
 df = pd.read_csv(METADATA_FILE)
 
 print("Total records in metadata:", len(df))
 print("Total persons in metadata:", df["person_id"].nunique())
 
-
-# --------------------------------
-# 3. تابع گرفتن شماره واقعی Record
-# --------------------------------
 
 def get_record_number(record_id):
 
@@ -45,9 +33,6 @@ def get_record_number(record_id):
 df["record_number"] = df["record_id"].apply(get_record_number)
 
 
-# --------------------------------
-# 4. شمارش Record هر فرد
-# --------------------------------
 
 record_counts = (
     df.groupby("person_id")
@@ -55,9 +40,6 @@ record_counts = (
 )
 
 
-# --------------------------------
-# 5. انتخاب افراد دارای حداقل 3 Record
-# --------------------------------
 
 eligible_persons = record_counts[
     record_counts >= 3
@@ -70,22 +52,15 @@ print(
 )
 
 
-# فقط همین افراد
 df_eligible = df[
     df["person_id"].isin(eligible_persons)
 ].copy()
 
 
-# --------------------------------
-# 6. ستون split
-# --------------------------------
 
 df_eligible["split"] = ""
 
 
-# --------------------------------
-# 7. تقسیم Recordهای هر فرد
-# --------------------------------
 
 for person_id in eligible_persons:
 
@@ -93,20 +68,16 @@ for person_id in eligible_persons:
         df_eligible["person_id"] == person_id
     ].copy()
 
-    # مرتب‌سازی بر اساس شماره Record
     person_records = person_records.sort_values(
         "record_number"
     )
 
     indices = person_records.index.tolist()
 
-    # همه به جز دو Record آخر → Train
     train_indices = indices[:-2]
 
-    # یکی مانده به آخر → Validation
     val_index = indices[-2]
 
-    # آخرین Record → Test
     test_index = indices[-1]
 
     df_eligible.loc[
@@ -125,9 +96,6 @@ for person_id in eligible_persons:
     ] = "test"
 
 
-# --------------------------------
-# 8. نمایش نتیجه
-# --------------------------------
 
 print("\nSplit counts:")
 
@@ -157,9 +125,6 @@ for split_name in [
     )
 
 
-# --------------------------------
-# 9. نمونه Person_01
-# --------------------------------
 
 print("\nExample - Person_01:")
 
@@ -177,9 +142,6 @@ print(
 )
 
 
-# --------------------------------
-# 10. ذخیره Split اصلی
-# --------------------------------
 
 output_file = (
     RESULTS_DIR

@@ -15,6 +15,22 @@
     </title>
 
     <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
         rel="stylesheet"
         href="{{ url_for('static', filename='style.css') }}"
     >
@@ -30,6 +46,7 @@
 
     <div class="background-glow glow-1"></div>
     <div class="background-glow glow-2"></div>
+    <div class="background-glow glow-3"></div>
 
 
     <!-- =====================================================
@@ -54,18 +71,48 @@
                         aria-hidden="true"
                     >
 
+                        <defs>
+                            <linearGradient
+                                id="ecgGradient"
+                                x1="0%"
+                                y1="0%"
+                                x2="100%"
+                                y2="100%"
+                            >
+                                <stop
+                                    offset="0%"
+                                    style="stop-color:#67e8f9;stop-opacity:1"
+                                />
+                                <stop
+                                    offset="100%"
+                                    style="stop-color:#3b82f6;stop-opacity:1"
+                                />
+                            </linearGradient>
+                        </defs>
+
+                        <!-- Shield background -->
                         <path
-                            d="
-                                M10 52
-                                L25 52
-                                L34 52
-                                L42 35
-                                L51 69
-                                L61 43
-                                L68 52
-                                L90 52
-                            "
-                        ></path>
+                            d="M50 10 L85 25 L85 55 C85 75 70 90 50 95 C30 90 15 75 15 55 L15 25 Z"
+                            fill="url(#ecgGradient)"
+                            opacity="0.15"
+                        />
+
+                        <!-- Heart icon -->
+                        <path
+                            d="M50 35 C50 35 40 25 30 25 C20 25 15 30 15 40 C15 55 50 70 50 70 C50 70 85 55 85 40 C85 30 80 25 70 25 C60 25 50 35 50 35"
+                            fill="url(#ecgGradient)"
+                            opacity="0.8"
+                        />
+
+                        <!-- ECG line -->
+                        <path
+                            d="M20 50 L35 50 L42 50 L48 35 L55 65 L62 45 L68 50 L80 50"
+                            stroke="url(#ecgGradient)"
+                            stroke-width="3"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            fill="none"
+                        />
 
                     </svg>
 
@@ -117,13 +164,7 @@
                 type="button"
             >
 
-                <span class="mode-number">
-                    01
-                </span>
-
-                <span>
-                    احراز هویت
-                </span>
+                احراز هویت
 
             </button>
 
@@ -135,13 +176,7 @@
                 type="button"
             >
 
-                <span class="mode-number">
-                    02
-                </span>
-
-                <span>
-                    ثبت کاربر جدید
-                </span>
+                ثبت کاربر جدید
 
             </button>
 
@@ -206,7 +241,13 @@
 
                     <div class="authentication-info">
 
-                        <div class="info-line"></div>
+                        <div class="info-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M12 16v-4"></path>
+                                <path d="M12 8h.01"></path>
+                            </svg>
+                        </div>
 
                         <div>
 
@@ -236,7 +277,7 @@
                         type="button"
                     >
 
-                        <span class="button-line"></span>
+
 
                         شروع احراز هویت
 
@@ -516,7 +557,7 @@
                             </strong>
 
                             <small>
-                                CNN + Feature Vector
+                                Feature Vector
                             </small>
 
                         </div>
@@ -617,12 +658,36 @@
                             نام کاربر جدید
                         </label>
 
-                        <input
-                            id="enrollUsername"
-                            type="text"
-                            placeholder="نام کاربری را وارد کنید"
-                            autocomplete="off"
-                        >
+                        <div class="input-wrapper">
+
+                            <input
+                                id="enrollUsername"
+                                type="text"
+                                placeholder="نام کاربری را وارد کنید"
+                                autocomplete="off"
+                            >
+
+                            <div class="input-icon">
+                                <svg
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                >
+                                    <path
+                                        d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+                                    ></path>
+                                    <circle
+                                        cx="12"
+                                        cy="7"
+                                        r="4"
+                                    ></circle>
+                                </svg>
+                            </div>
+
+                        </div>
 
                     </div>
 
@@ -665,7 +730,7 @@
                         type="button"
                     >
 
-                        <span class="button-line"></span>
+
 
                         شروع ثبت کاربر
 
@@ -911,7 +976,7 @@
                             </strong>
 
                             <p>
-                                تولید بردار ویژگی توسط شبکه CNN
+                                Feature Vector Extraction
                             </p>
 
                         </div>
@@ -959,9 +1024,7 @@
             </span>
 
             <span>
-                MAX30003&nbsp;&nbsp;•&nbsp;&nbsp;
-                Arduino Uno&nbsp;&nbsp;•&nbsp;&nbsp;
-                PyTorch CNN
+                MAX30003 • Arduino Uno
             </span>
 
         </footer>

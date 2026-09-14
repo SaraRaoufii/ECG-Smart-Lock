@@ -8,9 +8,6 @@ import neurokit2 as nk
 from scipy.signal import butter, sosfiltfilt
 
 
-# =========================================================
-# مسیرها
-# =========================================================
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 
@@ -22,10 +19,6 @@ DATASET_DIR = (
 )
 
 
-# =========================================================
-# فیلتر اصلی پروژه
-# این همان سیگنالی است که بعداً Beat را از آن می‌بریم
-# =========================================================
 
 def biometric_filter(
     signal,
@@ -49,9 +42,6 @@ def biometric_filter(
     )
 
 
-# =========================================================
-# Detectorهایی که می‌خواهیم بررسی کنیم
-# =========================================================
 
 methods = [
     "neurokit",
@@ -69,10 +59,6 @@ records_to_check = [
 ]
 
 
-# =========================================================
-# بررسی سه Record
-# =========================================================
-
 for record_id in records_to_check:
 
     print("\n")
@@ -80,10 +66,6 @@ for record_id in records_to_check:
     print("Person_14", record_id)
     print("========================================")
 
-
-    # -----------------------------------------------------
-    # خواندن Raw ECG
-    # -----------------------------------------------------
 
     record_path = (
         DATASET_DIR
@@ -100,10 +82,6 @@ for record_id in records_to_check:
     raw_ecg = record.p_signal[:, 0]
 
 
-    # -----------------------------------------------------
-    # سیگنال اصلی بیومتریک خودمان
-    # فقط برای نمایش
-    # -----------------------------------------------------
 
     bio_signal = biometric_filter(
         raw_ecg,
@@ -124,15 +102,11 @@ for record_id in records_to_check:
     )
 
 
-    # -----------------------------------------------------
-    # تک تک Detectorها
-    # -----------------------------------------------------
 
     for method in methods:
 
         try:
 
-            # Cleaning مخصوص همان Detector
             cleaned_for_detection = nk.ecg_clean(
                 raw_ecg,
                 sampling_rate=fs,
@@ -140,7 +114,6 @@ for record_id in records_to_check:
             )
 
 
-            # R detection
             signals, info = nk.ecg_peaks(
                 cleaned_for_detection,
                 sampling_rate=fs,
@@ -153,9 +126,6 @@ for record_id in records_to_check:
             ]
 
 
-            # ---------------------------------------------
-            # BPM تقریبی
-            # ---------------------------------------------
 
             duration = (
                 len(raw_ecg)
@@ -167,10 +137,6 @@ for record_id in records_to_check:
                 / duration
             ) * 60
 
-
-            # ---------------------------------------------
-            # RR interval
-            # ---------------------------------------------
 
             if len(r_peaks) > 1:
 
@@ -195,9 +161,6 @@ for record_id in records_to_check:
             )
 
 
-            # ---------------------------------------------
-            # رسم روی سیگنال بیومتریک
-            # ---------------------------------------------
 
             plt.figure(
                 figsize=(16, 4)
